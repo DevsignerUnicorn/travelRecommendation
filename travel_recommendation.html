@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Travel Recommendation - Home</title>
   <!-- Link to external CSS -->
-  <link rel="stylesheet" href="travel_recommendation.css">
+  <link rel="stylesheet" href="travel_recommendation.css" />
 </head>
 <body class="home">
   <nav>
@@ -13,19 +13,23 @@
     <a href="travel_recommendation.html">Home</a>
     <a href="about.html">About Us</a>
     <a href="contact.html">Contact Us</a>
+
     <!-- Search Form -->
     <div class="search-container">
-      <input type="text" id="search-input" placeholder="Enter keywords for recommendations">
+      <input type="text" id="search-input" placeholder="Enter keywords for recommendations" />
       <button type="button" onclick="searchFunction()">Search</button>
       <button type="button" onclick="resetFunction()">Reset</button>
     </div>
   </nav>
-  
+
   <div class="intro">
     <h1>Welcome to Our Travel Recommendation Website</h1>
     <p>Discover amazing destinations and plan your next adventure with our curated travel tips!</p>
   </div>
-  
+
+  <!-- Container to display fetched recommendations -->
+  <div id="recommendation-results"></div>
+
   <!-- Link to external JavaScript -->
   <script src="travel_recommendation.js"></script>
 </body>

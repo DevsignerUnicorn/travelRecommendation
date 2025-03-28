@@ -1,9 +1,15 @@
-/* General Styles */
-body {
+/* Reset / Base styles */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
     font-family: Arial, sans-serif;
   }
   
+  /* Navigation bar */
   nav {
     background-color: #f2f2f2;
     padding: 10px;
@@ -42,6 +48,7 @@ body {
     background-size: cover;
     background-position: center;
     color: #fff;
+    min-height: 100vh;
   }
   
   .intro {
@@ -50,7 +57,23 @@ body {
     text-align: center;
   }
   
-  /* About Page Specific */
+  /* Recommendation Results */
+  #recommendation-results {
+    padding: 20px;
+  }
+  
+  /* Individual city card styling */
+  .city-card {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding: 15px;
+    max-width: 500px;
+  }
+  
+  /* About Page */
   .about {
     padding: 20px;
   }
@@ -68,7 +91,7 @@ body {
     border-radius: 5px;
   }
   
-  /* Contact Page Specific */
+  /* Contact Page */
   .contact {
     padding: 20px;
   }
