@@ -1,0 +1,96 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  nav {
+    background-color: #f2f2f2;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .search-container {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .search-container input[type="text"] {
+    padding: 5px;
+    font-size: 1rem;
+  }
+  
+  .search-container button {
+    padding: 5px 10px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  /* Home Page Specific */
+  body.home {
+    background-image: url('background.jpg'); /* Update with your actual background image */
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+  }
+  
+  .intro {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 50px;
+    text-align: center;
+  }
+  
+  /* About Page Specific */
+  .about {
+    padding: 20px;
+  }
+  
+  .about .team {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .about .team-member {
+    border: 1px solid #ccc;
+    padding: 15px;
+    width: 200px;
+    border-radius: 5px;
+  }
+  
+  /* Contact Page Specific */
+  .contact {
+    padding: 20px;
+  }
+  
+  .contact form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .contact form input[type="text"],
+  .contact form input[type="email"],
+  .contact form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .contact form button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
