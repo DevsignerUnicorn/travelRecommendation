@@ -1,4 +1,4 @@
-/* Reset / Base styles */
+/* Reset / Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -9,7 +9,7 @@
     font-family: Arial, sans-serif;
   }
   
-  /* Navigation bar */
+  /* Navigation Bar */
   nav {
     background-color: #f2f2f2;
     padding: 10px;
@@ -44,7 +44,7 @@
   
   /* Home Page Specific */
   body.home {
-    background-image: url('background.jpg'); /* Update with your actual background image */
+    background-image: url('background.jpg'); /* Replace with your actual image path */
     background-size: cover;
     background-position: center;
     color: #fff;
@@ -62,7 +62,7 @@
     padding: 20px;
   }
   
-  /* Individual city card styling */
+  /* City/Destination Card Styling */
   .city-card {
     background-color: #fff;
     color: #333;

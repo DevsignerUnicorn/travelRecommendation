@@ -1,10 +1,11 @@
-// Global variable to store fetched data
-let travelData = null;
+// Global array to hold all flattened destinations from the JSON file.
+let allDestinations = [];
 
-// Fetch data as soon as the page loads
+/**
+ * Fetch the JSON data on page load.
+ */
 window.addEventListener('DOMContentLoaded', () => {
-  // Attempt to fetch the JSON file
-  fetch('travel_recommendation_api.json') // Update path/filename if needed
+  fetch('travel_recommendation_api.json') // Ensure the file is in the correct path.
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -12,13 +13,14 @@ window.addEventListener('DOMContentLoaded', () => {
       return response.json();
     })
     .then(data => {
-      travelData = data;
-      console.log('Fetched travel data:', travelData);
+      // Combine data from countries, temples, and beaches.
+      allDestinations = combineAllData(data);
+      console.log('Flattened travel data:', allDestinations);
 
-      // If you're on the home page (with #recommendation-results), display all results immediately
+      // If the home page is loaded (i.e. recommendation-results exists), display all destinations.
       const resultsContainer = document.getElementById('recommendation-results');
-      if (resultsContainer && travelData.cities) {
-        displayRecommendations(travelData.cities);
+      if (resultsContainer) {
+        displayRecommendations(allDestinations);
       }
     })
     .catch(error => {
@@ -27,70 +29,132 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Displays the array of city objects inside the #recommendation-results container.
- * @param {Array} citiesArray - An array of city objects from the JSON.
+ * Combine data from the provided JSON structure into one array.
+ * The JSON structure includes:
+ *  - data.countries (each with a nested cities array),
+ *  - data.temples,
+ *  - data.beaches.
  */
-function displayRecommendations(citiesArray) {
-  const resultsContainer = document.getElementById('recommendation-results');
-  if (!resultsContainer) return; // If this element doesn't exist, skip.
+function combineAllData(data) {
+  const combined = [];
 
-  // Clear any existing results
+  // Process each country's cities.
+  if (Array.isArray(data.countries)) {
+    data.countries.forEach(country => {
+      if (Array.isArray(country.cities)) {
+        country.cities.forEach(city => {
+          combined.push({
+            name: city.name,
+            imageUrl: city.imageUrl,
+            description: city.description,
+            category: 'City',
+            parentName: country.name // e.g., "Australia", "Japan", etc.
+          });
+        });
+      }
+    });
+  }
+
+  // Process temples.
+  if (Array.isArray(data.temples)) {
+    data.temples.forEach(temple => {
+      combined.push({
+        name: temple.name,
+        imageUrl: temple.imageUrl,
+        description: temple.description,
+        category: 'Temple',
+        parentName: '' // Not applicable.
+      });
+    });
+  }
+
+  // Process beaches.
+  if (Array.isArray(data.beaches)) {
+    data.beaches.forEach(beach => {
+      combined.push({
+        name: beach.name,
+        imageUrl: beach.imageUrl,
+        description: beach.description,
+        category: 'Beach',
+        parentName: '' // Not applicable.
+      });
+    });
+  }
+
+  return combined;
+}
+
+/**
+ * Display the list of destinations in the #recommendation-results container.
+ * @param {Array} destinations - The flattened list of destination objects.
+ */
+function displayRecommendations(destinations) {
+  const resultsContainer = document.getElementById('recommendation-results');
+  if (!resultsContainer) return;
+
+  // Clear any existing results.
   resultsContainer.innerHTML = '';
 
-  // If no data or empty array, show a "no recommendations" message
-  if (!citiesArray || citiesArray.length === 0) {
+  // If no destinations found, show a message.
+  if (!destinations || destinations.length === 0) {
     resultsContainer.innerHTML = '<p>No recommendations found.</p>';
     return;
   }
 
-  // Create a card for each city
-  citiesArray.forEach(city => {
-    const cityDiv = document.createElement('div');
-    cityDiv.classList.add('city-card');
-
-    // Use data from the JSON file (adjust properties to match your JSON)
-    cityDiv.innerHTML = `
-      <h3>${city.name}</h3>
-      <img src="${city.imageURL}" alt="${city.name}" style="max-width: 300px; display: block;">
-      <p>${city.description}</p>
+  // Create a card for each destination.
+  destinations.forEach(dest => {
+    const card = document.createElement('div');
+    card.classList.add('city-card');
+    card.innerHTML = `
+      <h3>${dest.name}</h3>
+      <p><strong>Category:</strong> ${dest.category}</p>
+      ${dest.parentName ? `<p><strong>Parent:</strong> ${dest.parentName}</p>` : ''}
+      <img src="${dest.imageUrl}" alt="${dest.name}" style="max-width: 300px; display: block;">
+      <p>${dest.description}</p>
     `;
-
-    resultsContainer.appendChild(cityDiv);
+    resultsContainer.appendChild(card);
   });
 }
 
 /**
- * Triggered when the user clicks the Search button.
- * Filters data based on the user’s query and displays the filtered list.
+ * Triggered when the user clicks the "Search" button.
+ * Filters the allDestinations array based on the search query.
  */
 function searchFunction() {
   const query = document.getElementById('search-input').value.trim().toLowerCase();
   console.log('Searching for:', query);
 
-  if (!travelData || !travelData.cities) {
+  if (!allDestinations || allDestinations.length === 0) {
     alert('Data not loaded yet. Please try again in a moment.');
     return;
   }
 
-  // Filter the cities array by matching the query in either name or description
-  const filteredCities = travelData.cities.filter(city =>
-    city.name.toLowerCase().includes(query) ||
-    city.description.toLowerCase().includes(query)
-  );
+  // Filter by name, description, or parent name.
+  const filtered = allDestinations.filter(item => {
+    return (
+      item.name.toLowerCase().includes(query) ||
+      item.description.toLowerCase().includes(query) ||
+      (item.parentName && item.parentName.toLowerCase().includes(query))
+    );
+  });
 
-  // Display filtered results (only if we're on the home page with #recommendation-results)
-  displayRecommendations(filteredCities);
+  // If on the home page (results container exists), display the filtered results.
+  const resultsContainer = document.getElementById('recommendation-results');
+  if (resultsContainer) {
+    displayRecommendations(filtered);
+  } else {
+    alert(`Found ${filtered.length} destinations matching your search.`);
+  }
 }
 
 /**
- * Triggered when the user clicks the Reset button.
- * Clears the search input and displays all cities again.
+ * Triggered when the user clicks the "Reset" button.
+ * Clears the search input and displays all destinations again.
  */
 function resetFunction() {
   document.getElementById('search-input').value = '';
-
-  if (travelData && travelData.cities) {
-    // Show all data (only if #recommendation-results exists on this page)
-    displayRecommendations(travelData.cities);
+  const resultsContainer = document.getElementById('recommendation-results');
+  if (resultsContainer && allDestinations.length > 0) {
+    displayRecommendations(allDestinations);
   }
 }
