@@ -1,10 +1,9 @@
-/* Reset / Base Styles */
+/* Base Reset and Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
-  
   body {
     font-family: Arial, sans-serif;
   }
@@ -17,25 +16,21 @@
     align-items: center;
     gap: 15px;
   }
-  
   nav a {
     text-decoration: none;
     color: #333;
     font-weight: bold;
   }
-  
   .search-container {
     margin-left: auto;
     display: flex;
     align-items: center;
     gap: 5px;
   }
-  
   .search-container input[type="text"] {
     padding: 5px;
     font-size: 1rem;
   }
-  
   .search-container button {
     padding: 5px 10px;
     font-size: 1rem;
@@ -44,15 +39,14 @@
   
   /* Hero for all pages */
   body.hero {
-    background-image: url('./images/hero_bg.png'); /* Replace with your actual image path */
+    background-image: url('./images/hero_bg.png'); /* Replace with your actual background image path */
     background-size: cover;
     background-position: center;
     color: #fff;
     min-height: 100vh;
   }
-  
   .intro {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0,0,0,0.5);
     padding: 50px;
   }
   
@@ -61,29 +55,57 @@
     padding: 20px;
   }
   
-  /* City/Destination Card Styling */
+  /* Card List Layout */
+  .card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  /* Individual Card */
   .city-card {
     background-color: #fff;
     color: #333;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    padding: 15px;
-    max-width: 500px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    overflow: hidden;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Card Image */
+  .city-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Card Content */
+  .card-content {
+    padding: 16px;
+  }
+  .card-content h3 {
+    margin-bottom: 8px;
+    font-size: 1.25rem;
+  }
+  .card-content p {
+    margin-bottom: 0;
+    line-height: 1.4;
   }
   
   /* About Page */
   .about {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0,0,0,0.5);
     padding: 50px;
   }
-  
   .about .team {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
   }
-  
   .about .team-member {
     border: 1px solid #ccc;
     padding: 15px;
@@ -93,15 +115,13 @@
   
   /* Contact Page */
   .contact {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0,0,0,0.5);
     padding: 50px;
   }
-  
   .contact form {
     max-width: 500px;
     margin: 0 auto;
   }
-  
   .contact form input[type="text"],
   .contact form input[type="email"],
   .contact form textarea {
@@ -112,9 +132,9 @@
     border-radius: 4px;
     box-sizing: border-box;
   }
-  
   .contact form button {
     padding: 10px 20px;
     font-size: 1rem;
     cursor: pointer;
   }
+  

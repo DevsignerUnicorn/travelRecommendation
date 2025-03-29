@@ -1,11 +1,9 @@
 // Global array to hold all flattened destinations from the JSON file.
 let allDestinations = [];
 
-/**
- * Fetch the JSON data on page load.
- */
+// Fetch the JSON data when the page loads.
 window.addEventListener('DOMContentLoaded', () => {
-  fetch('travel_recommendation_api.json') // Ensure the file is in the correct path.
+  fetch('travel_recommendation_api.json')
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -17,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
       allDestinations = combineAllData(data);
       console.log('Flattened travel data:', allDestinations);
 
-      // Instead of showing all data on load, display a placeholder message.
+      // Instead of displaying all data on load, show a placeholder message.
       const resultsContainer = document.getElementById('recommendation-results');
       if (resultsContainer) {
         resultsContainer.innerHTML = '<p>Please enter a search query to see recommendations.</p>';
@@ -30,10 +28,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Combine data from the provided JSON structure into one array.
- * The JSON structure includes:
- *  - data.countries (each with a nested cities array),
- *  - data.temples,
- *  - data.beaches.
  */
 function combineAllData(data) {
   const combined = [];
@@ -48,7 +42,7 @@ function combineAllData(data) {
             imageUrl: city.imageUrl,
             description: city.description,
             category: 'City',
-            parentName: country.name // e.g., "Australia", "Japan", etc.
+            parentName: country.name
           });
         });
       }
@@ -63,7 +57,7 @@ function combineAllData(data) {
         imageUrl: temple.imageUrl,
         description: temple.description,
         category: 'Temple',
-        parentName: '' // Not applicable.
+        parentName: ''
       });
     });
   }
@@ -76,7 +70,7 @@ function combineAllData(data) {
         imageUrl: beach.imageUrl,
         description: beach.description,
         category: 'Beach',
-        parentName: '' // Not applicable.
+        parentName: ''
       });
     });
   }
@@ -86,7 +80,6 @@ function combineAllData(data) {
 
 /**
  * Display the list of destinations in the #recommendation-results container.
- * @param {Array} destinations - The flattened list of destination objects.
  */
 function displayRecommendations(destinations) {
   const resultsContainer = document.getElementById('recommendation-results');
@@ -101,31 +94,35 @@ function displayRecommendations(destinations) {
     return;
   }
 
+  // Create a container for all cards.
+  const cardList = document.createElement('div');
+  cardList.classList.add('card-list');
+
   // Create a card for each destination.
   destinations.forEach(dest => {
-    const card = document.createElement('div');
-    card.classList.add('city-card');
-    card.innerHTML = `
-      <h3>${dest.name}</h3>
-      <p><strong>Category:</strong> ${dest.category}</p>
-      ${dest.parentName ? `<p><strong>Parent:</strong> ${dest.parentName}</p>` : ''}
-      <img src="${dest.imageUrl}" alt="${dest.name}" style="max-width: 300px; display: block;">
-      <p>${dest.description}</p>
+    const cardWrapper = document.createElement('div');
+    cardWrapper.classList.add('city-card');
+    cardWrapper.innerHTML = `
+      <img src="${dest.imageUrl}" alt="${dest.name}" class="city-image">
+      <div class="card-content">
+        <h3>${dest.name}</h3>
+        <p>${dest.description}</p>
+      </div>
     `;
-    resultsContainer.appendChild(card);
+    cardList.appendChild(cardWrapper);
   });
+
+  // Append the cards to the results container.
+  resultsContainer.appendChild(cardList);
 }
 
 /**
  * Triggered when the user clicks the "Search" button.
- * Filters the allDestinations array based on the search query.
  */
 function searchFunction() {
-  const query = document.getElementById('search-input').value.trim();
-  const lowerQuery = query.toLowerCase();
-  console.log('Searching for:', lowerQuery);
+  const query = document.getElementById('search-input').value.trim().toLowerCase();
+  console.log('Searching for:', query);
 
-  // If no query provided, show a placeholder message.
   if (!query) {
     const resultsContainer = document.getElementById('recommendation-results');
     resultsContainer.innerHTML = '<p>Please enter a search query to see recommendations.</p>';
@@ -137,30 +134,15 @@ function searchFunction() {
     return;
   }
 
-  let filtered = [];
-  // Check if the query matches "beach" variations.
-  if (lowerQuery === 'beach' || lowerQuery === 'beaches') {
-    filtered = allDestinations.filter(item => item.category.toLowerCase() === 'beach');
-  }
-  // Check if the query matches "temple" variations.
-  else if (lowerQuery === 'temple' || lowerQuery === 'temples') {
-    filtered = allDestinations.filter(item => item.category.toLowerCase() === 'temple');
-  }
-  // Check if the query matches "country" variations.
-  else if (lowerQuery === 'country' || lowerQuery === 'countries') {
-    // Since we do not have country-level recommendations, show cities (which are grouped by country).
-    filtered = allDestinations.filter(item => item.category.toLowerCase() === 'city');
-  }
-  // Otherwise, use default filtering (matches in name, description, or parentName).
-  else {
-    filtered = allDestinations.filter(item =>
-      item.name.toLowerCase().includes(lowerQuery) ||
-      item.description.toLowerCase().includes(lowerQuery) ||
-      (item.parentName && item.parentName.toLowerCase().includes(lowerQuery))
+  // Filter by name, description, or parent name.
+  const filtered = allDestinations.filter(item => {
+    return (
+      item.name.toLowerCase().includes(query) ||
+      item.description.toLowerCase().includes(query) ||
+      (item.parentName && item.parentName.toLowerCase().includes(query))
     );
-  }
+  });
 
-  // Display the filtered results.
   const resultsContainer = document.getElementById('recommendation-results');
   if (resultsContainer) {
     displayRecommendations(filtered);
@@ -171,7 +153,6 @@ function searchFunction() {
 
 /**
  * Triggered when the user clicks the "Reset" button.
- * Clears the search input and shows a placeholder message.
  */
 function resetFunction() {
   document.getElementById('search-input').value = '';
