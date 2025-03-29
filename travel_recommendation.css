@@ -42,8 +42,8 @@
     cursor: pointer;
   }
   
-  /* Home Page Specific */
-  body.home {
+  /* Hero for all pages */
+  body.hero {
     background-image: url('./images/hero_bg.png'); /* Replace with your actual image path */
     background-size: cover;
     background-position: center;
@@ -54,7 +54,6 @@
   .intro {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 50px;
-    text-align: center;
   }
   
   /* Recommendation Results */
@@ -77,7 +76,6 @@
   .about {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 50px;
-    text-align: center;
   }
   
   .about .team {
@@ -95,7 +93,8 @@
   
   /* Contact Page */
   .contact {
-    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 50px;
   }
   
   .contact form {
