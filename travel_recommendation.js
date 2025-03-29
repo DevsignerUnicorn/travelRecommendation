@@ -17,10 +17,10 @@ window.addEventListener('DOMContentLoaded', () => {
       allDestinations = combineAllData(data);
       console.log('Flattened travel data:', allDestinations);
 
-      // If the home page is loaded (i.e. recommendation-results exists), display all destinations.
+      // Instead of showing all data on load, display a placeholder message.
       const resultsContainer = document.getElementById('recommendation-results');
       if (resultsContainer) {
-        displayRecommendations(allDestinations);
+        resultsContainer.innerHTML = '<p>Please enter a search query to see recommendations.</p>';
       }
     })
     .catch(error => {
@@ -121,24 +121,46 @@ function displayRecommendations(destinations) {
  * Filters the allDestinations array based on the search query.
  */
 function searchFunction() {
-  const query = document.getElementById('search-input').value.trim().toLowerCase();
-  console.log('Searching for:', query);
+  const query = document.getElementById('search-input').value.trim();
+  const lowerQuery = query.toLowerCase();
+  console.log('Searching for:', lowerQuery);
+
+  // If no query provided, show a placeholder message.
+  if (!query) {
+    const resultsContainer = document.getElementById('recommendation-results');
+    resultsContainer.innerHTML = '<p>Please enter a search query to see recommendations.</p>';
+    return;
+  }
 
   if (!allDestinations || allDestinations.length === 0) {
     alert('Data not loaded yet. Please try again in a moment.');
     return;
   }
 
-  // Filter by name, description, or parent name.
-  const filtered = allDestinations.filter(item => {
-    return (
-      item.name.toLowerCase().includes(query) ||
-      item.description.toLowerCase().includes(query) ||
-      (item.parentName && item.parentName.toLowerCase().includes(query))
+  let filtered = [];
+  // Check if the query matches "beach" variations.
+  if (lowerQuery === 'beach' || lowerQuery === 'beaches') {
+    filtered = allDestinations.filter(item => item.category.toLowerCase() === 'beach');
+  }
+  // Check if the query matches "temple" variations.
+  else if (lowerQuery === 'temple' || lowerQuery === 'temples') {
+    filtered = allDestinations.filter(item => item.category.toLowerCase() === 'temple');
+  }
+  // Check if the query matches "country" variations.
+  else if (lowerQuery === 'country' || lowerQuery === 'countries') {
+    // Since we do not have country-level recommendations, show cities (which are grouped by country).
+    filtered = allDestinations.filter(item => item.category.toLowerCase() === 'city');
+  }
+  // Otherwise, use default filtering (matches in name, description, or parentName).
+  else {
+    filtered = allDestinations.filter(item =>
+      item.name.toLowerCase().includes(lowerQuery) ||
+      item.description.toLowerCase().includes(lowerQuery) ||
+      (item.parentName && item.parentName.toLowerCase().includes(lowerQuery))
     );
-  });
+  }
 
-  // If on the home page (results container exists), display the filtered results.
+  // Display the filtered results.
   const resultsContainer = document.getElementById('recommendation-results');
   if (resultsContainer) {
     displayRecommendations(filtered);
@@ -149,12 +171,12 @@ function searchFunction() {
 
 /**
  * Triggered when the user clicks the "Reset" button.
- * Clears the search input and displays all destinations again.
+ * Clears the search input and shows a placeholder message.
  */
 function resetFunction() {
   document.getElementById('search-input').value = '';
   const resultsContainer = document.getElementById('recommendation-results');
-  if (resultsContainer && allDestinations.length > 0) {
-    displayRecommendations(allDestinations);
+  if (resultsContainer) {
+    resultsContainer.innerHTML = '<p>Please enter a search query to see recommendations.</p>';
   }
 }
