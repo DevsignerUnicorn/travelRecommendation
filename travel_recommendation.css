@@ -44,7 +44,7 @@
   
   /* Home Page Specific */
   body.home {
-    background-image: url('background.jpg'); /* Replace with your actual image path */
+    background-image: url('./images/hero_bg.png'); /* Replace with your actual image path */
     background-size: cover;
     background-position: center;
     color: #fff;
@@ -75,7 +75,9 @@
   
   /* About Page */
   .about {
-    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 50px;
+    text-align: center;
   }
   
   .about .team {
